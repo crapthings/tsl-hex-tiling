@@ -3,7 +3,21 @@
   "version": "0.1.0",
   "license": "MIT",
   "packageManager": "pnpm@10.17.1",
-  "description": "Non-repeating hex texture tiling for Three.js TSL and WebGPU",
+  "description": "Stochastic non-repeating texture tiling for Three.js TSL, WebGPU and WebGL 2",
+  "keywords": [
+    "three.js",
+    "threejs",
+    "tsl",
+    "webgpu",
+    "webgl2",
+    "wgsl",
+    "node-material",
+    "texture-tiling",
+    "stochastic-texture",
+    "hex-tiling",
+    "procedural-texture",
+    "pbr"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/crapthings/tsl-hex-tiling.git"

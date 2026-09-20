@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>tsl-hex-tiling · WebGPU</title>
+    <style>
+      * { box-sizing: border-box; }
+      html, body, #app { width: 100%; height: 100%; margin: 0; overflow: hidden; }
+      body { background: #101419; color: #eef2f5; font: 14px/1.4 system-ui, sans-serif; }
+      canvas { display: block; }
+      .panel { position: fixed; top: 18px; left: 18px; width: min(300px, calc(100vw - 36px)); padding: 14px 15px; border: 1px solid #ffffff20; border-radius: 10px; background: #111820dd; backdrop-filter: blur(12px); pointer-events: none; }
+      h1 { margin: 0 0 4px; font-size: 17px; }
+      p { margin: 0; color: #adbac7; font-size: 12px; }
+      .badge { display: inline-block; margin-top: 8px; padding: 3px 7px; border-radius: 999px; background: #63d3a633; color: #8ce8c3; font-size: 12px; }
+      .demo-link { color: #8ce8c3; text-decoration: none; font-size: 12px; pointer-events: auto; }
+    </style>
+  </head>
+  <body>
+    <div id="app"></div>
+    <section class="panel">
+      <h1>TSL Hex Tiling</h1>
+      <p>Left: repeated UVs · Right: stochastic hex tiling</p>
+      <p><a class="demo-link" href="/pbr.html">Open PBR demo →</a></p>
+      <span class="badge" id="backend">initializing renderer…</span>
+    </section>
+    <script type="module" src="/demo/boot.js"></script>
+  </body>
+</html>

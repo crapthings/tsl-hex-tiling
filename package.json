@@ -1,0 +1,54 @@
+{
+  "name": "tsl-hex-tiling",
+  "version": "0.1.0",
+  "license": "MIT",
+  "packageManager": "pnpm@10.17.1",
+  "description": "Non-repeating hex texture tiling for Three.js TSL and WebGPU",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/crapthings/tsl-hex-tiling.git"
+  },
+  "homepage": "https://github.com/crapthings/tsl-hex-tiling#readme",
+  "bugs": {
+    "url": "https://github.com/crapthings/tsl-hex-tiling/issues"
+  },
+  "type": "module",
+  "sideEffects": false,
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "files": [
+    "dist"
+  ],
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build && tsc --emitDeclarationOnly",
+    "typecheck": "tsc --noEmit",
+    "test": "node --test tests/*.test.mjs && tsc -p tests/tsconfig.json",
+    "prepack": "pnpm run typecheck && pnpm run build && pnpm test",
+    "release": "node scripts/release.mjs",
+    "release:dry": "node scripts/release.mjs --dry-run",
+    "build:demo": "vite build --config vite.demo.config.js",
+    "preview": "vite preview --config vite.demo.config.js"
+  },
+  "peerDependencies": {
+    "three": ">=0.186.0 <0.187.0"
+  },
+  "devDependencies": {
+    "@types/three": "^0.186.0",
+    "three": "^0.186.0",
+    "typescript": "^5.9.3",
+    "vite": "^7.1.7",
+    "lil-gui": "^0.21.0"
+  }
+}

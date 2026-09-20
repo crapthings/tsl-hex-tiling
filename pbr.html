@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>tsl-hex-tiling · PBR Demo</title>
+    <style>
+      * { box-sizing: border-box; }
+      html, body, #app { width: 100%; height: 100%; margin: 0; overflow: hidden; }
+      body { background: #070a0d; color: #eef2f5; font: 14px/1.4 system-ui, sans-serif; }
+      canvas { display: block; }
+      .info { position: fixed; top: 18px; left: 18px; z-index: 2; padding: 13px 15px; border: 1px solid #ffffff1e; border-radius: 10px; background: #111820d9; backdrop-filter: blur(12px); pointer-events: none; }
+      .info h1 { margin: 0 0 4px; font-size: 17px; }
+      .info p { margin: 0; color: #aebac5; font-size: 12px; }
+      .info a { color: #86e4bd; pointer-events: auto; text-decoration: none; }
+      .backend { display: inline-block; margin-top: 8px; padding: 3px 7px; border-radius: 999px; background: #63d3a633; color: #8ce8c3; font-size: 11px; }
+    </style>
+  </head>
+  <body data-demo="pbr">
+    <div id="app"></div>
+    <section class="info">
+      <h1>Rocky Terrain · Full PBR</h1>
+      <p>2K albedo · normal · AO/roughness</p>
+      <p><a href="/">← Basic comparison</a></p>
+      <span class="backend" id="backend">initializing…</span>
+    </section>
+    <script type="module" src="/demo/boot.js"></script>
+  </body>
+</html>

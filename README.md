@@ -78,56 +78,6 @@ Use `hexTexture(dataTexture, { uniforms, dataMap: true })` for raw data. The hel
 
 Each distinct tiled data map performs three gradient samples per fragment. Color maps add one coarse mip lookup when contrast correction is enabled; this assumes a complete mip chain down to 1×1. Samples are unconditional, with explicit gradients from the continuous, unshifted UVs. Separate maps still build separate lattice graphs; no cross-map GPU speedup is claimed without profiling generated shaders.
 
-## Development and release checks
-
-```bash
-pnpm install --child-concurrency=1 --network-concurrency=1
-pnpm run typecheck
-pnpm run build
-pnpm test
-pnpm run build:demo
-pnpm dev
-```
-
-Visit `/tests/browser.html` for native WebGPU pixel regressions and `/tests/browser.html?webgl` for WebGL 2. Both must finish with zero failures. These tests cover constant colors, live uniforms, alpha, data-map isolation, UV selection, texture transforms, existing-material integration, normal strength and boundary parameters. Also inspect `/` and `/pbr.html` visually, including the GUI controls and both backends.
-
-`pnpm pack` runs type checking, library compilation and API/consumer-type tests before creating a local archive. It does not publish. Only `dist`, README, package metadata and LICENSE ship; demo assets and lil-gui are excluded from runtime dependencies. Browser tests remain a separate release gate.
-
-The pre-release API no longer exposes the ineffective `lookupSkipThreshold`. Compared with the original prototype, texture density now matches ordinary sampling and color contrast correction defaults to off.
-
-## Publishing to npm
-
-Run these commands from the package root:
-
-```bash
-# Sign in to the npm account that owns (or can create) this package.
-pnpm login --registry=https://registry.npmjs.org/
-
-# Check the package contents and release lifecycle without uploading.
-pnpm release:dry
-
-# Automatically bump patch (e.g. 0.1.0 → 0.1.1) and publish.
-pnpm release
-
-# Optional larger version increments.
-pnpm release minor
-pnpm release major
-```
-
-`pnpm release` checks npm login, runs `prepack` (strict type checking, a fresh library build, API/release-script tests and consumer type checks), increments the version, then publishes to the public npm registry. Checks run before the version changes. The publish subprocess uses `--ignore-scripts` to avoid running these checks twice and `--no-git-checks` because the automatic version update modifies the worktree. Review your working tree before release; uncommitted changes can be published. Complete any npm authentication or 2FA prompt locally. Browser regression tests described above remain a separate release check.
-
-`pnpm release:dry` runs the checks and npm's dry-run packaging without login, uploading or changing the version. It prints the proposed next version; the package preview uses the unchanged current version. It does not verify publishing permission. `pnpm release minor --dry-run` previews a minor bump.
-
-Every normal release invocation increments the local version, including the first release. No Git commits, tags or GitHub releases are created automatically; commit the version change after success. An already published name/version cannot be overwritten. If publication fails or its outcome is uncertain, the incremented version is retained: check npm, then use `pnpm release --retry` to retry the same version if it was not published. Authentication/check failures leave the version unchanged. Concurrent release commands are blocked by `.release.lock`; after a forced termination, remove that file only once the previous process has stopped.
-
-If the unscoped package name is owned by someone else, choose an available name or your npm scope first.
-
-### README on npm
-
-npm automatically renders the root `README.md` on the package page. It is included in the package even though `files` only lists `dist`; no `readme` field or separate upload is needed. Publish from this package root, not from `dist`. The dry run lists `README.md` among the files to publish.
-
-To update the README shown on npm, edit it and publish a new package version; pushing changes to GitHub alone does not update npm. Use public absolute URLs for screenshots and links to repository files. See the [npm README documentation](https://docs.npmjs.com/about-package-readme-files/) and [pnpm publish documentation](https://pnpm.io/10.x/cli/publish).
-
 ## Attribution
 
 The algorithm is adapted from Fabrice Neyret's texture tile-breaking shader and the original `three-hex-tiling` implementation. See that project's license and implementation notes for the lineage.

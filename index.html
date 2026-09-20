@@ -1,29 +1,121 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" class="scroll-smooth bg-olive-950">
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>tsl-hex-tiling · WebGPU</title>
-    <style>
-      * { box-sizing: border-box; }
-      html, body, #app { width: 100%; height: 100%; margin: 0; overflow: hidden; }
-      body { background: #101419; color: #eef2f5; font: 14px/1.4 system-ui, sans-serif; }
-      canvas { display: block; }
-      .panel { position: fixed; top: 18px; left: 18px; width: min(300px, calc(100vw - 36px)); padding: 14px 15px; border: 1px solid #ffffff20; border-radius: 10px; background: #111820dd; backdrop-filter: blur(12px); pointer-events: none; }
-      h1 { margin: 0 0 4px; font-size: 17px; }
-      p { margin: 0; color: #adbac7; font-size: 12px; }
-      .badge { display: inline-block; margin-top: 8px; padding: 3px 7px; border-radius: 999px; background: #63d3a633; color: #8ce8c3; font-size: 12px; }
-      .demo-link { color: #8ce8c3; text-decoration: none; font-size: 12px; pointer-events: auto; }
+    <meta name="description" content="Stochastic non-repeating texture tiling for Three.js TSL, WebGPU and WebGL 2.">
+    <meta name="theme-color" content="#171812">
+    <title>tsl-hex-tiling · Break texture repetition</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <style type="text/tailwindcss">
+      @theme { --font-sans: Inter, ui-sans-serif, system-ui, sans-serif; }
+      @layer base { ::selection { @apply bg-olive-300 text-olive-950; } }
+      @layer utilities {
+        .olive-grid { background-image: linear-gradient(to right, color-mix(in oklab, var(--color-olive-400) 10%, transparent) 1px, transparent 1px), linear-gradient(to bottom, color-mix(in oklab, var(--color-olive-400) 10%, transparent) 1px, transparent 1px); background-size: 42px 42px; }
+      }
     </style>
   </head>
-  <body>
-    <div id="app"></div>
-    <section class="panel">
-      <h1>TSL Hex Tiling</h1>
-      <p>Left: repeated UVs · Right: stochastic hex tiling</p>
-      <p><a class="demo-link" href="/pbr.html">Open PBR demo →</a></p>
-      <span class="badge" id="backend">initializing renderer…</span>
-    </section>
-    <script type="module" src="/demo/boot.js"></script>
+  <body class="min-h-screen overflow-x-hidden bg-olive-950 text-olive-50 antialiased">
+    <header class="grid grid-cols-[1fr_auto] items-center border-b border-olive-700/50 px-5 py-4 sm:px-9 lg:px-14">
+      <a href="./" class="flex items-center gap-3 font-semibold tracking-tight">
+        <span class="grid size-8 place-items-center bg-olive-300 text-sm font-black text-olive-950">HX</span>
+        <span>tsl-hex-tiling</span>
+      </a>
+      <nav class="flex items-center gap-5 text-sm text-olive-300 sm:gap-8">
+        <a class="transition hover:text-white" href="#api">API</a>
+        <a class="transition hover:text-white" href="https://github.com/crapthings/tsl-hex-tiling">GitHub ↗</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="relative grid min-h-[calc(100svh-65px)] border-b border-olive-700/50 lg:grid-cols-[minmax(0,0.92fr)_minmax(520px,1.08fr)]">
+        <div class="olive-grid relative flex flex-col justify-between overflow-hidden border-b border-olive-700/50 px-5 py-12 sm:px-9 sm:py-16 lg:border-r lg:border-b-0 lg:px-14 lg:py-20">
+          <div class="absolute -top-32 -left-28 size-96 rounded-full bg-olive-400/15 blur-3xl"></div>
+          <div class="relative">
+            <div class="mb-8 inline-flex items-center gap-2 border border-olive-500/50 bg-olive-900/80 px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] text-olive-300">
+              <span class="size-1.5 rounded-full bg-olive-300 shadow-[0_0_12px_var(--color-olive-300)]"></span>
+              Three.js r186 · WebGPU ready
+            </div>
+            <h1 class="max-w-3xl text-[clamp(3.3rem,8vw,7.7rem)] leading-[0.84] font-black tracking-[-0.075em] text-white">
+              Break the<br><span class="text-olive-300">repeat.</span>
+            </h1>
+            <p class="mt-9 max-w-xl text-lg leading-8 text-olive-200 sm:text-xl">
+              Stochastic hex tiling for Three.js TSL. Hide obvious texture repetition across large surfaces while keeping your existing PBR workflow.
+            </p>
+            <div class="mt-10 flex flex-wrap gap-3">
+              <a href="#install" class="bg-olive-300 px-5 py-3 text-sm font-bold text-olive-950 transition hover:bg-olive-200">Get started</a>
+              <a href="./pbr.html" class="border border-olive-500 px-5 py-3 text-sm font-bold text-olive-100 transition hover:border-olive-300 hover:text-white">Launch PBR demo ↗</a>
+            </div>
+          </div>
+          <dl class="relative mt-16 grid grid-cols-3 border-y border-olive-700/60 text-left">
+            <div class="py-4 pr-3"><dt class="text-2xl font-black text-white">3×</dt><dd class="mt-1 text-xs text-olive-400">gradient samples</dd></div>
+            <div class="border-x border-olive-700/60 px-4 py-4"><dt class="text-2xl font-black text-white">2</dt><dd class="mt-1 text-xs text-olive-400">render backends</dd></div>
+            <div class="py-4 pl-4"><dt class="text-2xl font-black text-white">0</dt><dd class="mt-1 text-xs text-olive-400">global patches</dd></div>
+          </dl>
+        </div>
+
+        <div class="relative min-h-[560px] bg-[#080a07] lg:min-h-0">
+          <iframe title="Live repeated versus stochastic texture comparison" src="./basic.html" class="absolute inset-0 size-full border-0" loading="eager"></iframe>
+          <div class="pointer-events-none absolute right-4 bottom-4 border border-olive-700/60 bg-olive-950/85 px-3 py-2 text-[11px] uppercase tracking-[0.16em] text-olive-300 backdrop-blur sm:right-6 sm:bottom-6">Live WebGPU demo · drag to orbit</div>
+        </div>
+      </section>
+
+      <section id="install" class="grid border-b border-olive-700/50 lg:grid-cols-[0.72fr_1.28fr]">
+        <div class="bg-olive-300 px-5 py-12 text-olive-950 sm:px-9 lg:px-14 lg:py-16">
+          <p class="text-xs font-bold uppercase tracking-[0.2em]">Install</p>
+          <h2 class="mt-4 text-4xl font-black tracking-tight sm:text-5xl">One graph.<br>Two backends.</h2>
+          <p class="mt-6 max-w-md leading-7 text-olive-900">Pure TSL compiles to WGSL for WebGPU and GLSL for the WebGL 2 fallback. No ShaderChunk replacement, prototypes, or global state.</p>
+        </div>
+        <div class="flex flex-col justify-center gap-7 bg-olive-900 px-5 py-12 sm:px-9 lg:px-14 lg:py-16">
+          <div class="flex items-center justify-between gap-4 border border-olive-600 bg-olive-950 px-5 py-4 font-mono text-sm sm:text-base">
+            <code><span class="text-olive-500">$</span> pnpm add tsl-hex-tiling three</code>
+            <button id="copy-install" class="shrink-0 text-xs font-bold uppercase tracking-wider text-olive-300 hover:text-white" type="button">Copy</button>
+          </div>
+          <div class="grid gap-px bg-olive-700/50 sm:grid-cols-3">
+            <article class="bg-olive-900 p-5"><span class="text-xs text-olive-500">01</span><h3 class="mt-8 font-bold">Node native</h3><p class="mt-2 text-sm leading-6 text-olive-300">Composes with Standard and Physical node materials.</p></article>
+            <article class="bg-olive-900 p-5"><span class="text-xs text-olive-500">02</span><h3 class="mt-8 font-bold">PBR aware</h3><p class="mt-2 text-sm leading-6 text-olive-300">Color, normal, roughness, metalness, and AO maps.</p></article>
+            <article class="bg-olive-900 p-5"><span class="text-xs text-olive-500">03</span><h3 class="mt-8 font-bold">Live controls</h3><p class="mt-2 text-sm leading-6 text-olive-300">Tune scale and blending without recompiling materials.</p></article>
+          </div>
+        </div>
+      </section>
+
+      <section id="api" class="grid border-b border-olive-700/50 lg:grid-cols-[1.15fr_0.85fr]">
+        <div class="border-b border-olive-700/50 px-5 py-14 sm:px-9 lg:border-r lg:border-b-0 lg:px-14 lg:py-20">
+          <p class="text-xs font-bold uppercase tracking-[0.2em] text-olive-400">Minimal API</p>
+          <pre class="mt-8 overflow-x-auto border-l-2 border-olive-300 bg-black/25 p-5 text-sm leading-7 text-olive-100"><code><span class="text-olive-500">import</span> { applyHexTiling } <span class="text-olive-500">from</span> <span class="text-olive-300">'tsl-hex-tiling'</span>
+
+<span class="text-olive-500">const</span> { uniforms } = applyHexTiling(material, {
+  map: colorMap,
+  normalMap,
+  roughnessMap,
+  aoMap
+})
+
+uniforms.patchScale.value = <span class="text-olive-300">3.5</span></code></pre>
+        </div>
+        <div class="olive-grid px-5 py-14 sm:px-9 lg:px-14 lg:py-20">
+          <p class="text-xs font-bold uppercase tracking-[0.2em] text-olive-400">Designed for terrain</p>
+          <h2 class="mt-5 text-4xl font-black tracking-tight text-white sm:text-5xl">Keep the detail.<br><span class="text-olive-400">Lose the grid.</span></h2>
+          <p class="mt-7 max-w-lg leading-7 text-olive-300">Randomized triangular neighborhoods break long-range repetition while explicit texture gradients preserve stable mip selection across patch boundaries.</p>
+          <div class="mt-10 flex gap-3">
+            <a href="./pbr.html" class="border border-olive-500 px-4 py-2.5 text-sm font-bold hover:border-olive-300">Explore PBR</a>
+            <a href="https://github.com/crapthings/tsl-hex-tiling#readme" class="px-4 py-2.5 text-sm font-bold text-olive-300 hover:text-white">Read the docs →</a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="grid gap-5 px-5 py-8 text-sm text-olive-400 sm:grid-cols-[1fr_auto] sm:px-9 lg:px-14">
+      <p>MIT licensed · Built for Three.js TSL</p>
+      <div class="flex gap-6"><a class="hover:text-white" href="https://www.npmjs.com/package/tsl-hex-tiling">npm</a><a class="hover:text-white" href="https://github.com/crapthings/tsl-hex-tiling">Source</a></div>
+    </footer>
+
+    <script>
+      document.querySelector('#copy-install').addEventListener('click', async event => {
+        await navigator.clipboard.writeText('pnpm add tsl-hex-tiling three')
+        event.currentTarget.textContent = 'Copied'
+        setTimeout(() => { event.currentTarget.textContent = 'Copy' }, 1600)
+      })
+    </script>
   </body>
 </html>

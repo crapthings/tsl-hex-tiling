@@ -28,7 +28,7 @@ const controls = new OrbitControls(camera, renderer.domElement)
 controls.target.set(0, 0.35, 0)
 controls.enableDamping = true
 
-const map = await new THREE.TextureLoader().loadAsync('/textures/mossy-stone-seamless-512.png')
+const map = await new THREE.TextureLoader().loadAsync(`${import.meta.env.BASE_URL}textures/mossy-stone-seamless-512.png`)
 map.colorSpace = THREE.SRGBColorSpace
 map.wrapS = map.wrapT = THREE.RepeatWrapping
 map.repeat.set(9, 9)

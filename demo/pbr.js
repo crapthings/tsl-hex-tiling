@@ -33,7 +33,7 @@ const controls = new OrbitControls(camera, renderer.domElement)
 controls.enableDamping = true
 controls.target.set(0, 0, 0)
 
-const gltf = await new GLTFLoader().loadAsync('/assets/rocky-terrain-02/rocky_terrain_02_2k.gltf')
+const gltf = await new GLTFLoader().loadAsync(`${import.meta.env.BASE_URL}assets/rocky-terrain-02/rocky_terrain_02_2k.gltf`)
 const sourceMesh = gltf.scene.getObjectByProperty('isMesh', true)
 const sourceMaterial = sourceMesh.material
 const maps = {
